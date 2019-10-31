@@ -41,14 +41,14 @@ exports.initTable = (dbInfo) =>{
         if(err)throw err;
         console.log("Connected to Database: " + dbInfo.databaseName);
       });
-      var query = "CREATE TABLE " + dbInfo.tableName + " (";
+      var query = "CREATE TABLE " + dbInfo.tableName + " (id int NOT NULL AUTO_INCREMENT,";
       for (i= 0; i < dbInfo.columnNames.length; i++){
           query += dbInfo.columnNames[i] + " VARCHAR(255)";
           if(i != dbInfo.columnNames.length - 1){
               query += ", " ;
           }
       }
-      query += ");"
+      query += ", PRIMARY KEY (id));"
       console.log('Query: ' + query);
         con.query(query, function(err, result){
           if (err) throw err;
@@ -91,6 +91,32 @@ exports.createDummyData = (dbInfo) =>{
     con.close;
 }
 
+exports.selectByID = (id, fn) =>{
+  var con = mysql.createConnection({
+    host: "localhost",
+    user: 'root',
+    password: "root",
+    database: "nodedb",
+    charset: "utf8mb4",
+    multipleStatements: true
+  });
+  
+  con.connect(function(err){
+    if(err)throw err;
+    console.log("Connected to Database: nodedb");
+  });
+
+  var query = `SELECT * FROM persons WHERE id=${id}`;
+  console.log(query);
+  con.query(query, function(err, result){
+    if (err) throw err;
+    var resultJSON = result;
+    con.end();
+    console.log(resultJSON);
+    fn(resultJSON);
+  });
+}
+
 exports.selectAll = (fn) =>{
   var con = mysql.createConnection({
     host: "localhost",
@@ -116,6 +142,82 @@ exports.selectAll = (fn) =>{
       resultJSON.titles.push(result[0][i].Field);
     }
     resultJSON.objects = result[1];
+    con.end();
     fn(resultJSON);
+  });
+}
+
+exports.updateByID = (json, fn) =>{
+  var con = mysql.createConnection({
+    host: "localhost",
+    user: 'root',
+    password: "root",
+    database: "nodedb",
+    charset: "utf8mb4",
+    multipleStatements: true
+  });
+  
+  con.connect(function(err){
+    if(err)throw err;
+    console.log("Connected to Database: nodedb");
+  });
+  var object = 
+  console.log("json in UpdateByID: " + json.name);
+  var query = `UPDATE persons SET name="${json.name}", height="${json.height}", age="${json.age}" WHERE id=${json.id};`;
+  query += `SELECT * FROM persons WHERE id=${json.id};`;
+  console.log(query);
+  con.query(query, function(err, result){
+    if (err) throw err;
+    var resultJSON = result[1];
+    con.end();
+    console.log(resultJSON);
+    fn(resultJSON);
+  });
+}
+
+exports.insert = (json, fn) =>{
+  var con = mysql.createConnection({
+    host: "localhost",
+    user: 'root',
+    password: "root",
+    database: "nodedb",
+    charset: "utf8mb4",
+    multipleStatements: true
+  });
+  
+  con.connect(function(err){
+    if(err)throw err;
+    console.log("Connected to Database: nodedb");
+  });
+
+  var query = `INSERT INTO persons (name, height, age) VALUES ("${json.name}", "${json.height}", "${json.age}");`
+
+  con.query(query, function(err, result){
+    if (err) throw err;
+    con.end();
+  });
+}
+
+exports.deleteByID = (id, fn) =>{
+  var con = mysql.createConnection({
+    host: "localhost",
+    user: 'root',
+    password: "root",
+    database: "nodedb",
+    charset: "utf8mb4",
+    multipleStatements: true
+  });
+  
+  con.connect(function(err){
+    if(err)throw err;
+    console.log("Connected to Database: nodedb");
+  });
+
+  var query = `DELETE FROM persons WHERE id=${id};`
+
+  con.query(query, function(err, result){
+    if (err) throw err;
+    con.end();
+    fn(result);
   });
 }

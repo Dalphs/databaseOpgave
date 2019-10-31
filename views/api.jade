@@ -1,0 +1,15 @@
+extends layout
+
+block content
+    
+    each type, i in requestType
+      +request(type, requestURL[i])
+
+
+
+    mixin request(requestType, requestUrl)
+        .request-template
+            .request-type
+                p= requestType
+            .request-url
+                p localhost:3000/#{requestUrl}
