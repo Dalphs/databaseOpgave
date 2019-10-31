@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  button(onclick='createDatabase()') Initialise Database
+  button(onclick='createTable()') Create Table
+  button(onclick='insertDummyData()') Create Dummy Data
+  button(onclick='showData()') Show Data
+
+  #table-container
+
+  script(src='javascripts/databaseInitialiser.js')

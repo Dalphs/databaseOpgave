@@ -1,0 +1,18 @@
+extends layout
+
+block content
+    .row
+        each title in titles
+            +titleRow(title)
+    each object in objects
+        .row
+            each value in object
+                +contentRow(value)
+
+
+    mixin titleRow(title)
+        .row-title
+            h3= title
+    mixin contentRow(content)
+        .row-content
+            h5= content
