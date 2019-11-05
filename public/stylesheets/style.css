@@ -1,6 +1,23 @@
 body {
-  padding: 50px;
+  padding: 0px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color: yellow;
+}
+
+html, body{
+  height: 100%;
+  padding: 0px;
+  margin: 0px;
+}
+
+.headings{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.headings h1{
+  font-size: 300%
 }
 
 a {
@@ -10,13 +27,14 @@ a {
 .request-template{
   border-style: solid;
   border-width: 1px;
-  max-width: 300px;
+  width: 300px;
   display: flex;
   margin: 5px;
+  justify-content: space-around;
 }
 
 .request-template .request-type{
-  color: #ffa500;
+  color: red;
   padding-right: 10px;
   padding-left: 5px;
 }
@@ -27,6 +45,7 @@ a {
 
 .row{
   display: flex;
+  justify-content: center;
 }
 
 .row:nth-child(even) .row-content{
@@ -39,10 +58,14 @@ a {
   background-color: black;
   color: white;
   width: 10rem;
-  border-color: white;
+  border-color: yellow;
   border-width: 0.05rem;
   border-style: solid;
   text-align: center;
+}
+
+#table-container{
+  margin-top: 1rem;
 }
 
 .row-content{
@@ -50,4 +73,64 @@ a {
   text-align: center;
   width: 10rem;
 
+}
+
+.button-row{
+  display: flex;
+  justify-content: center;
+  justify-content: space-around;
+}
+
+.button-container{
+  display: flex;
+  justify-content: center;
+  width: 20rem;
+  margin: 20px;
+}
+
+.spin-image{
+  width:150px;
+  border-radius: 50%;
+}
+
+.continuous-rotation{
+  -webkit-animation: rotation 2s infinite linear;
+}
+
+@-webkit-keyframes rotation{
+  from{
+    -webkit-transform: rotate(0deg);
+  }
+  to{
+    -webkit-transform: rotate(359deg);
+  }
+}
+
+.sequence-button {
+	box-shadow:inset 0px 0px 0px 2px #f29c93;
+	background:linear-gradient(to bottom, #fe1a00 5%, #ce0100 100%);
+	background-color:#fe1a00;
+	border-radius:13px;
+	border:1px solid #d83526;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:23px;
+	font-weight:bold;
+	padding:17px 61px;
+	text-decoration: none;
+  text-shadow:0px 1px 0px #b23e35;
+  margin-left: 20px;
+  margin-right: 20px;
+  width: 20rem;
+  text-align: center;
+}
+.sequence-button:hover {
+	background:linear-gradient(to bottom, #ce0100 5%, #fe1a00 100%);
+	background-color:#ce0100;
+}
+.sequence-button:active {
+	position:relative;
+	top:1px;
 }

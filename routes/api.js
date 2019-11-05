@@ -4,7 +4,7 @@ var dbConnector = require('../databaseConnector');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('api', {requestType: ['GET', 'PUT', 'POST', 'DELETE'], requestURL: ['persons', 'persons', 'persons/:id', 'persons/:id']});
+  res.render('api', {requestType: ['GET', 'GET','PUT', 'POST', 'DELETE'], requestURL: ['persons', 'persons/:id', 'persons', 'persons/:id', 'persons/:id']});
 });
 
 router.get('/persons',(req, res, next) =>{

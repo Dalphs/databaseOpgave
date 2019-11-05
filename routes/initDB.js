@@ -10,17 +10,13 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/initTable', function(req, res, next){
-  var dbSetup = {databaseName: 'nodedb',
-  tableName: 'persons',
-  columnNames: ['name', 'height', 'age']};
+  var dbSetup = {columnNames: ['name', 'height', 'age', 'status']};
   dbConnector.initTable(dbSetup);
-  res.end;
+  res.end();
 });
 
 router.get('/createData', function(req, res, next){
-  var dbSetup = {databaseName: 'nodedb',
-  tableName: 'persons',
-  columnNames: ['name', 'height', 'age']};
+  var dbSetup = {columnNames: ['name', 'height', 'age', 'status']};
   dbConnector.createDummyData(dbSetup);
   res.end();
 })

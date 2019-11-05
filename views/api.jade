@@ -1,9 +1,12 @@
 extends layout
 
 block content
+    .button-row
+        h1 Update and get mission details with the following requests
     
     each type, i in requestType
-      +request(type, requestURL[i])
+        .button-row
+            +request(type, requestURL[i])
 
 
 
@@ -12,4 +15,4 @@ block content
             .request-type
                 p= requestType
             .request-url
-                p localhost:3000/#{requestUrl}
+                p localhost:3000/API/#{requestUrl}

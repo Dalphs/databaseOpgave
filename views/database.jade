@@ -1,11 +1,24 @@
 extends layout
 
 block content
-  button(onclick='createDatabase()') Initialise Database
-  button(onclick='createTable()') Create Table
-  button(onclick='insertDummyData()') Create Dummy Data
-  button(onclick='showData()') Show Data
-
-  #table-container
+  
+  .headings
+    h1 WARNING!
+    h3 You are about to receive a mission, make sure you are alone in a secure room
+    h3 To see mission details do the correct initialisation sequence
+  .button-row
+    a#sequence-button2.sequence-button Initialise Table
+    a.sequence-button#sequence-button1(onclick='sequenceAction(1)') Initialise Database
+    a.sequence-button#sequence-button3 Create Data
+  .button-row
+    .button-container
+      img#spin-image2.spin-image(src='/images/nuclear.png')
+    .button-container  
+      img#spin-image1.spin-image(src='/images/nuclear.png')
+    .button-container
+      img#spin-image3.spin-image(src='/images/nuclear.png')
+  .button-row#data-button-container
+  .button-row
+    #table-container
 
   script(src='javascripts/databaseInitialiser.js')

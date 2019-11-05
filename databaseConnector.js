@@ -1,4 +1,13 @@
 var mysql = require('mysql');
+var dbSetup = {
+  host: "localhost",
+  user: 'root',
+  password: "root",
+  charset: "utf8mb4",
+  multipleStatements: true
+}
+var dbSetupName = 'nsa_mission';
+var dbTableName = 'targets';
 
 exports.createDatabase = function(dbInfo){
     console.log(dbInfo);
@@ -6,42 +15,31 @@ exports.createDatabase = function(dbInfo){
 }
 
 initDatabase = (dbName) =>{
-    var con = mysql.createConnection({
-        host: "localhost",
-        user: 'root',
-        password: "root",
-        charset: "utf8mb4",
-        multipleStatements: true
-      });
+  var config = dbSetup;
+  var con = mysql.createConnection(config);
       
       con.connect(function(err){
         if(err)throw err;
         console.log("Connected to Database");
       });
-      var query = "DROP DATABASE IF EXISTS " + dbName + ";";
-      query += "CREATE DATABASE " + dbName + ";"; 
+      var query = "DROP DATABASE IF EXISTS " + dbSetupName + ";";
+      query += "CREATE DATABASE " + dbSetupName + ";"; 
         con.query(query, function(err, result){
           if (err) throw err;
-          console.log(result);
         });
         con.end();
 }
 
 exports.initTable = (dbInfo) =>{
-    var con = mysql.createConnection({
-        host: "localhost",
-        user: 'root',
-        password: "root",
-        database: dbInfo.databaseName,
-        charset: "utf8mb4",
-        multipleStatements: true
-      });
+    var config = dbSetup;
+    config.database = dbSetupName;
+    var con = mysql.createConnection(config);
       
       con.connect(function(err){
         if(err)throw err;
-        console.log("Connected to Database: " + dbInfo.databaseName);
+        console.log("Connected to Database: " + dbSetupName);
       });
-      var query = "CREATE TABLE " + dbInfo.tableName + " (id int NOT NULL AUTO_INCREMENT,";
+      var query = "CREATE TABLE " + dbTableName + " (id int NOT NULL AUTO_INCREMENT,";
       for (i= 0; i < dbInfo.columnNames.length; i++){
           query += dbInfo.columnNames[i] + " VARCHAR(255)";
           if(i != dbInfo.columnNames.length - 1){
@@ -58,19 +56,13 @@ exports.initTable = (dbInfo) =>{
 }
 
 exports.createDummyData = (dbInfo) =>{
-    var con = mysql.createConnection({
-        host: "localhost",
-        user: 'root',
-        password: "root",
-        database: dbInfo.databaseName,
-        charset: "utf8mb4",
-        multipleStatements: true
-      });
+  var config = dbSetup;
+  config.database = dbSetupName;
+  var con = mysql.createConnection(config);
       
-      con.connect(function(err){
-        if(err)throw err;
-        console.log("Connected to Database: " + dbInfo.databaseName);
-      });
+    con.connect(function(err){
+      if(err)throw err;
+    });
 
     var dummyData = {firstname: ['Simon', 'Anders', 'Thomas'], lastname: ['Dalby', 'Cosby', 'Nielsen']};
     for (i = 0; i < 3; i++){
@@ -79,8 +71,8 @@ exports.createDummyData = (dbInfo) =>{
             var height = (Math.ceil(Math.random() * 20) + 170).toString(10) + "cm";
             var age = (Math.ceil(Math.random() * 10) + 20).toString(10);
 
-            var query = `INSERT INTO ${dbInfo.tableName} (${dbInfo.columnNames[0]}, ${dbInfo.columnNames[1]}, ${dbInfo.columnNames[2]})
-             VALUES ("${name}", "${height}", "${age}");`;
+            var query = `INSERT INTO ${dbTableName} (${dbInfo.columnNames[0]}, ${dbInfo.columnNames[1]}, ${dbInfo.columnNames[2]}, ${dbInfo.columnNames[3]})
+             VALUES ("${name}", "${height}", "${age}", "Alive");`;
             console.log(query);
 
             con.query(query, function(err, result){
@@ -92,21 +84,15 @@ exports.createDummyData = (dbInfo) =>{
 }
 
 exports.selectByID = (id, fn) =>{
-  var con = mysql.createConnection({
-    host: "localhost",
-    user: 'root',
-    password: "root",
-    database: "nodedb",
-    charset: "utf8mb4",
-    multipleStatements: true
-  });
+  var config = dbSetup;
+  config.database = dbSetupName;
+  var con = mysql.createConnection(config);
   
   con.connect(function(err){
     if(err)throw err;
-    console.log("Connected to Database: nodedb");
   });
 
-  var query = `SELECT * FROM persons WHERE id=${id}`;
+  var query = `SELECT * FROM ${dbTableName} WHERE id=${id}`;
   console.log(query);
   con.query(query, function(err, result){
     if (err) throw err;
@@ -118,24 +104,18 @@ exports.selectByID = (id, fn) =>{
 }
 
 exports.selectAll = (fn) =>{
-  var con = mysql.createConnection({
-    host: "localhost",
-    user: 'root',
-    password: "root",
-    database: "nodedb",
-    charset: "utf8mb4",
-    multipleStatements: true
-  });
+  var config = dbSetup;
+  config.database = dbSetupName;
+  var con = mysql.createConnection(config);
   
   con.connect(function(err){
     if(err)throw err;
-    console.log("Connected to Database: nodedb");
   });
 
   var resultJSON = {titles: [], objects: []};
 
-  var query = "SHOW columns FROM persons;";
-  query += "SELECT * FROM persons;";
+  var query = `SHOW columns FROM ${dbTableName};`;
+  query += `SELECT * FROM ${dbTableName};`;
   con.query(query, function(err, result){
     if (err) throw err;
     for (i = 0; i < result[0].length; i++){
@@ -148,14 +128,9 @@ exports.selectAll = (fn) =>{
 }
 
 exports.updateByID = (json, fn) =>{
-  var con = mysql.createConnection({
-    host: "localhost",
-    user: 'root',
-    password: "root",
-    database: "nodedb",
-    charset: "utf8mb4",
-    multipleStatements: true
-  });
+  var config = dbSetup;
+  config.database = dbSetupName;
+  var con = mysql.createConnection(config);
   
   con.connect(function(err){
     if(err)throw err;
@@ -163,8 +138,8 @@ exports.updateByID = (json, fn) =>{
   });
   var object = 
   console.log("json in UpdateByID: " + json.name);
-  var query = `UPDATE persons SET name="${json.name}", height="${json.height}", age="${json.age}" WHERE id=${json.id};`;
-  query += `SELECT * FROM persons WHERE id=${json.id};`;
+  var query = `UPDATE ${dbTableName} SET name="${json.name}", height="${json.height}", age="${json.age}" WHERE id=${json.id};`;
+  query += `SELECT * FROM ${dbTableName} WHERE id=${json.id};`;
   console.log(query);
   con.query(query, function(err, result){
     if (err) throw err;
@@ -176,21 +151,16 @@ exports.updateByID = (json, fn) =>{
 }
 
 exports.insert = (json, fn) =>{
-  var con = mysql.createConnection({
-    host: "localhost",
-    user: 'root',
-    password: "root",
-    database: "nodedb",
-    charset: "utf8mb4",
-    multipleStatements: true
-  });
+  var config = dbSetup;
+  config.database = dbSetupName;
+  var con = mysql.createConnection(config);
   
   con.connect(function(err){
     if(err)throw err;
     console.log("Connected to Database: nodedb");
   });
 
-  var query = `INSERT INTO persons (name, height, age) VALUES ("${json.name}", "${json.height}", "${json.age}");`
+  var query = `INSERT INTO ${dbTableName} (name, height, age) VALUES ("${json.name}", "${json.height}", "${json.age}");`
 
   con.query(query, function(err, result){
     if (err) throw err;
@@ -199,25 +169,76 @@ exports.insert = (json, fn) =>{
 }
 
 exports.deleteByID = (id, fn) =>{
-  var con = mysql.createConnection({
-    host: "localhost",
-    user: 'root',
-    password: "root",
-    database: "nodedb",
-    charset: "utf8mb4",
-    multipleStatements: true
-  });
+  var config = dbSetup;
+  config.database = dbSetupName;
+  var con = mysql.createConnection(config);
   
   con.connect(function(err){
     if(err)throw err;
     console.log("Connected to Database: nodedb");
   });
 
-  var query = `DELETE FROM persons WHERE id=${id};`
+  var query = `DELETE FROM ${dbTableName} WHERE id=${id};`
 
   con.query(query, function(err, result){
     if (err) throw err;
     con.end();
     fn(result);
+  });
+}
+
+exports.databaseExists = (fn) =>{
+  var con = mysql.createConnection(dbSetup);
+  
+  
+  con.connect(function(err){if(err) throw err});
+  
+  var query = `SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '${dbSetupName}'`;
+
+  con.query(query, function(err, result){
+    if (err) throw err;
+    var json = result;
+    fn(json.length != 0);
+    con.end();
+  });
+}
+
+exports.tableExists = (fn) =>{
+  var config = dbSetup;
+  config.database = dbSetupName;
+  var con = mysql.createConnection(config);
+  
+  con.connect(function(err){
+    if(err)throw err;
+  });
+
+  var query = `SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '${dbTableName}'`;
+
+  con.query(query, function(err, result){
+    if (err) throw err;
+    var json = result;
+    console.log(json.length != 0);
+    fn(json.length != 0);
+    con.end();
+  });
+}
+
+exports.dataExists = (fn) =>{
+  var config = dbSetup;
+  config.database = dbSetupName;
+  var con = mysql.createConnection(config);
+  
+  con.connect(function(err){
+    if(err)throw err;
+  });
+
+  var query = `SELECT * FROM ${dbTableName} LIMIT 0, 1`;
+
+  con.query(query, function(err, result){
+    if (err) throw err;
+    var json = result;
+    console.log(json.length != 0);
+    fn(json.length != 0);
+    con.end();
   });
 }
