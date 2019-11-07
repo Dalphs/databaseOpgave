@@ -29,6 +29,7 @@ router.get('/persons/:id', (req, res, next) =>{
 router.put('/persons/:id', (req, res) =>{
   var id = req.params.id;
   var json = req.body;
+  json.id = id;
   dbConnector.updateByID(json, (result) =>{
     res.send("Object updated");
   });

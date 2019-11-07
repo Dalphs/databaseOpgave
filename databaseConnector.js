@@ -160,7 +160,7 @@ exports.insert = (json, fn) =>{
     console.log("Connected to Database: nodedb");
   });
 
-  var query = `INSERT INTO ${dbTableName} (name, height, age) VALUES ("${json.name}", "${json.height}", "${json.age}");`
+  var query = `INSERT INTO ${dbTableName} (name, height, age, status) VALUES ("${json.name}", "${json.height}", "${json.age}", "${json.status}");`
 
   con.query(query, function(err, result){
     if (err) throw err;
